@@ -6,19 +6,31 @@ import dotenv from 'dotenv'
 
 dotenv.config()
 
+const DEFAULT_AUTH0_DOMAIN = 'pohutukawa-2023-ricky.au.auth0.com'
+const DEFAULT_AUTH0_AUDIENCE = 'https://travels/api'
+const DEFAULT_AUTH0_CLIENT_ID = 'Ouo4yhNha6QVHJd1XeV3rKaLe0dmGsvM'
+
+export const AUTH0_DOMAIN =
+  process.env.VITE_AUTH0_DOMAIN || DEFAULT_AUTH0_DOMAIN
+export const AUTH0_AUDIENCE =
+  process.env.VITE_AUTH0_AUDIENCE || DEFAULT_AUTH0_AUDIENCE
+export const AUTH0_CLIENT_ID =
+  process.env.VITE_AUTH0_CLIENT_ID || DEFAULT_AUTH0_CLIENT_ID
+export const AUTH0_CLIENT_SECRET = process.env.VITE_AUTH0_CLIENT_SECRET
+
 export const oidcConfig: oidc.ConfigParams = {
   authorizationParams: {
     response_type: 'code',
     scope: 'openid profile email create:orders update:users',
-    audience: process.env.VITE_AUTH0_AUDIENCE,
+    audience: AUTH0_AUDIENCE,
   },
   authRequired: false,
   auth0Logout: true,
 
   baseURL: 'http://localhost:3000',
-  clientID: process.env.VITE_AUTH0_CLIENT_ID,
-  clientSecret: process.env.VITE_AUTH0_CLIENT_SECRET,
-  issuerBaseURL: `https://${process.env.VITE_AUTH0_DOMAIN}`,
+  clientID: AUTH0_CLIENT_ID,
+  clientSecret: AUTH0_CLIENT_SECRET,
+  issuerBaseURL: `https://${AUTH0_DOMAIN}`,
   secret: 'LONG_RANDOM_STRING',
   routes: {
     login: false,
@@ -27,8 +39,8 @@ export const oidcConfig: oidc.ConfigParams = {
 }
 
 const authConfig = {
-  issuerBaseURL: `https://${process.env.VITE_AUTH0_DOMAIN}`,
-  audience: process.env.VITE_AUTH0_AUDIENCE,
+  issuerBaseURL: `https://${AUTH0_DOMAIN}`,
+  audience: AUTH0_AUDIENCE,
 }
 
 export const validateAccessToken = auth(authConfig)

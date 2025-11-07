@@ -5,6 +5,8 @@ import jwt, { SignOptions } from 'jsonwebtoken'
 import nock from 'nock'
 import dotenv from 'dotenv'
 
+import { AUTH0_AUDIENCE, AUTH0_DOMAIN } from '../auth0.ts'
+
 dotenv.config()
 
 // this private key is for testing purposes only so that we can mock tokens
@@ -50,7 +52,7 @@ const nockReply = {
 }
 
 // nock will intercept the http call and will return the nockReply object
-nock(`https://${process.env.VITE_AUTH0_DOMAIN}/`)
+nock(`https://${AUTH0_DOMAIN}/`)
   .persist()
   .get('/.well-known/jwks.json')
   .reply(200, nockReply)
@@ -69,8 +71,8 @@ export const getMockToken = () => {
   const options: SignOptions = {
     header: { kid: '0', alg: 'RS256' },
     expiresIn: '1d',
-    audience: process.env.VITE_AUTH0_AUDIENCE as string,
-    issuer: `https://${process.env.VITE_AUTH0_DOMAIN}/`,
+    audience: AUTH0_AUDIENCE,
+    issuer: `https://${AUTH0_DOMAIN}/`,
   }
 
   return jwt.sign(payload, privateKey, options)
