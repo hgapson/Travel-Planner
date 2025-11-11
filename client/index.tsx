@@ -8,13 +8,23 @@ const queryClient = new QueryClient()
 
 const router = createBrowserRouter(routes)
 
+const domain = import.meta.env.VITE_AUTH0_DOMAIN
+const clientId = import.meta.env.VITE_AUTH0_CLIENT_ID
+const audience = import.meta.env.VITE_AUTH0_AUDIENCE
+const redirectUri =
+  import.meta.env.VITE_AUTH0_CALLBACK_URL ?? window.location.origin
+
+if (!domain || !clientId || !audience) {
+  throw new Error('Missing Auth0 configuration environment variables')
+}
+
 const root = createRoot(document.getElementById('app') as HTMLElement)
 root.render(
   <Auth0Provider
-    domain="pohutukawa-2023-ricky.au.auth0.com"
-    clientId="Ouo4yhNha6QVHJd1XeV3rKaLe0dmGsvM"
-    redirectUri={window.location.origin}
-    audience="https://travels/api"
+    domain={domain}
+    clientId={clientId}
+    redirectUri={redirectUri}
+    audience={audience}
   >
     <QueryClientProvider client={queryClient}>
       <RouterProvider router={router} />
