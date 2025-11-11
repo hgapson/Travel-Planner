@@ -8,11 +8,12 @@ const queryClient = new QueryClient()
 
 const router = createBrowserRouter(routes)
 
-const domain = import.meta.env.VITE_AUTH0_DOMAIN
-const clientId = import.meta.env.VITE_AUTH0_CLIENT_ID
-const audience = import.meta.env.VITE_AUTH0_AUDIENCE
+const metaEnv = (import.meta as any).env as Record<string, string | undefined>
+const domain = metaEnv.VITE_AUTH0_DOMAIN
+const clientId = metaEnv.VITE_AUTH0_CLIENT_ID
+const audience = metaEnv.VITE_AUTH0_AUDIENCE
 const redirectUri =
-  import.meta.env.VITE_AUTH0_CALLBACK_URL ?? window.location.origin
+  metaEnv.VITE_AUTH0_CALLBACK_URL ?? window.location.origin
 
 if (!domain || !clientId || !audience) {
   throw new Error('Missing Auth0 configuration environment variables')
